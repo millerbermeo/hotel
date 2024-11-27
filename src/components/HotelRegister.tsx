@@ -119,12 +119,12 @@ const HotelRegister: React.FC = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 max-w-4xl">
+        <div className="container mx-auto p-3 2xl:p-6 max-w-4xl">
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <div>
                         <Input
-                            size="lg"
+                            size="md"
                             label="Nombre"
                             fullWidth
                             name="nombre"
@@ -138,7 +138,7 @@ const HotelRegister: React.FC = () => {
 
                     <div>
                         <Input
-                            size="lg"
+                            size="md"
                             label="Dirección"
                             fullWidth
                             name="direccion"
@@ -152,7 +152,7 @@ const HotelRegister: React.FC = () => {
 
                     <div>
                         <Input
-                            size="lg"
+                            size="md"
                             label="Ciudad"
                             fullWidth
                             name="ciudad"
@@ -166,7 +166,7 @@ const HotelRegister: React.FC = () => {
 
                     <div>
                         <Input
-                            size="lg"
+                            size="md"
                             label="Código Único"
                             fullWidth
                             name="nit"
@@ -180,7 +180,7 @@ const HotelRegister: React.FC = () => {
 
                     <div>
                         <Input
-                            size="lg"
+                            size="md"
                             label="Cantidad max 42"
                             fullWidth
                             name="numero_habitaciones"
@@ -197,7 +197,7 @@ const HotelRegister: React.FC = () => {
                 <div className="space-y-4">
                     <div>
                         <Input
-                            size="lg"
+                            size="md"
                             type="file"
                             name="imagen"
                             onChange={handleFileChange}
