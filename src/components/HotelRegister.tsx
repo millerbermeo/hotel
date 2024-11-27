@@ -119,8 +119,8 @@ const HotelRegister: React.FC = () => {
     };
 
     return (
-        <div className="container mx-auto p-3 2xl:p-6 max-w-4xl">
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="container scale-75 2xl:scale-100 mx-auto p-3 2xl:p-6 max-w-4xl">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2  gap-6">
                 <div className="space-y-4">
                     <div>
                         <Input
