@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Hotel } from "../types/Hotel"; 
 import api from "../utils/api";
 
 interface UseFetchHotelsResult {
-  data: Hotel[] | null; // Datos de la petición
-  loading: boolean;     // Estado de carga
-  error: string | null; // Mensaje de error si ocurre
+  data: Hotel[] | null;
+  loading: boolean;
+  error: string | null;
+  refresh: () => void;  // Agregar refresh a la interfaz
 }
 
 const useFetchHotels = (): UseFetchHotelsResult => {
@@ -13,23 +14,27 @@ const useFetchHotels = (): UseFetchHotelsResult => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get<Hotel[]>('/hoteles');
-        setData(response.data);
-      } catch (err: any) {
-        setError(err.message || "Error al obtener los datos");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHotels();
+  const fetchHotels = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get<Hotel[]>('/hoteles');
+      setData(response.data);
+    } catch (err: any) {
+      setError(err.message || "Error al obtener los datos");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { data, loading, error };
+  const refresh = () => {
+    fetchHotels();
+  };
+
+  useEffect(() => {
+    fetchHotels();
+  }, [fetchHotels]);
+
+  return { data, loading, error, refresh };
 };
 
 export default useFetchHotels;

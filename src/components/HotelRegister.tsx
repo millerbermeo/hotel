@@ -4,9 +4,7 @@ import useRegisterHotel from "../hooks/useRegisterHotel";
 import { HotelData } from "../types/HotelData";
 import { useNavigate } from "react-router-dom";
 
-
 const HotelRegister: React.FC = () => {
-
     const navigate = useNavigate();
 
     const [hotel, setHotel] = useState<HotelData>({
@@ -17,6 +15,7 @@ const HotelRegister: React.FC = () => {
         numero_habitaciones: 0,
         imagen: "",
     });
+
     const { registerHotel, loading, error } = useRegisterHotel();
     const [formErrors, setFormErrors] = useState({
         nombre: "",
@@ -27,7 +26,6 @@ const HotelRegister: React.FC = () => {
     });
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
- 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setHotel({
