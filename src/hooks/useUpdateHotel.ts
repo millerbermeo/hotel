@@ -1,13 +1,12 @@
 import { useState } from "react";
-import api from "../utils/api"; 
+import api from "../utils/api"; // Importa la instancia de axios
 import { Hotel } from "../types/Hotel";
 import toast from "react-hot-toast";
-import useFetchHotels from "./useFetchHotels"; 
+
 
 const useUpdateHotel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { refresh } = useFetchHotels();  // Ahora podemos usar refresh
 
   const updateHotel = async (hotel: Hotel) => {
     setLoading(true);
@@ -21,7 +20,7 @@ const useUpdateHotel = () => {
 
       toast.success('Hotel actualizado exitosamente');
       setLoading(false);
-      refresh();  // Llamar a refresh para obtener los datos actualizados
+      
       return response.data;
     } catch (err: any) {
       setLoading(false);

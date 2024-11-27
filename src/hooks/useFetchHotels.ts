@@ -1,12 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Hotel } from "../types/Hotel"; 
 import api from "../utils/api";
 
 interface UseFetchHotelsResult {
   data: Hotel[] | null;
-  loading: boolean;
+  loading: boolean; 
   error: string | null;
-  refresh: () => void;  // Agregar refresh a la interfaz
 }
 
 const useFetchHotels = (): UseFetchHotelsResult => {
@@ -14,7 +13,7 @@ const useFetchHotels = (): UseFetchHotelsResult => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchHotels = useCallback(async () => {
+  const fetchHotels = async () => {
     try {
       setLoading(true);
       const response = await api.get<Hotel[]>('/hoteles');
@@ -24,17 +23,13 @@ const useFetchHotels = (): UseFetchHotelsResult => {
     } finally {
       setLoading(false);
     }
+  };
+  useEffect(() => {
+
+    fetchHotels();
   }, []);
 
-  const refresh = () => {
-    fetchHotels();
-  };
-
-  useEffect(() => {
-    fetchHotels();
-  }, [fetchHotels]);
-
-  return { data, loading, error, refresh };
+  return { data, loading, error };
 };
 
 export default useFetchHotels;

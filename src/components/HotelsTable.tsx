@@ -1,5 +1,3 @@
-// HotelsTable.tsx
-
 import React, { useState } from "react";
 import {
     Table,
@@ -23,14 +21,14 @@ const HotelsTable: React.FC = () => {
     const { data, loading, error } = useFetchHotels();
     const { deleteHotel } = useDeleteHotel();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // Estado para el modal de actualización
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [selectedHotelId, setSelectedHotelId] = useState<number | null>(null);
-    const [selectedHotelData, setSelectedHotelData] = useState<any | null>(null); // Estado para almacenar los datos del hotel seleccionado
+    const [selectedHotelData, setSelectedHotelData] = useState<any | null>(null);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearch(value);
-        setPage(1); // Restablecer a la primera página al realizar una búsqueda
+        setPage(1);
     };
 
     const handlePageChange = (newPage: number) => {
@@ -38,29 +36,29 @@ const HotelsTable: React.FC = () => {
     };
 
     const openDeleteModal = (hotelId: string) => {
-        setSelectedHotelId(parseInt(hotelId, 10)); // Convertimos el ID a número
+        setSelectedHotelId(parseInt(hotelId, 10));
         setIsDeleteModalOpen(true);
     };
 
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
         setSelectedHotelId(null);
+        
     };
 
     const handleConfirmDeletion = async () => {
         if (selectedHotelId !== null) {
-            const success = await deleteHotel(String(selectedHotelId));
-            if (success) {
-                closeDeleteModal();
-            }
+          await deleteHotel(String(selectedHotelId));
+            closeDeleteModal();
+            window.location.reload()
         }
     };
 
     const openUpdateModal = (hotelId: number) => {
         if (data !== null) {
-            const selectedHotel = data.find((hotel) => hotel.id === hotelId); // Buscar los datos del hotel
+            const selectedHotel = data.find((hotel) => hotel.id === hotelId);
             setSelectedHotelId(hotelId);
-            setSelectedHotelData(selectedHotel); // Almacenar los datos del hotel seleccionado
+            setSelectedHotelData(selectedHotel);
             setIsUpdateModalOpen(true);
         } else {
             console.error("No se pudo encontrar el hotel: data es null");
@@ -70,8 +68,16 @@ const HotelsTable: React.FC = () => {
     const closeUpdateModal = () => {
         setIsUpdateModalOpen(false);
         setSelectedHotelId(null);
-        setSelectedHotelData(null); // Limpiar los datos cuando se cierre el modal
+        setSelectedHotelData(null);
+        window.location.reload()
     };
+
+    const filteredData = data?.filter(
+        (hotel) =>
+            hotel.nombre.toLowerCase().includes(search.toLowerCase()) ||
+            hotel.nit.toLowerCase().includes(search.toLowerCase()) ||
+            hotel.ciudad.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
         <div className="hotels-table">
@@ -88,60 +94,59 @@ const HotelsTable: React.FC = () => {
                 <p className="text-red-500">{error}</p>
             ) : (
                 <>
-                    <Table aria-label="Gestión de Hoteles">
-                        <TableHeader>
-                            <TableColumn>ID</TableColumn>
-                            <TableColumn>Nombre</TableColumn>
-                            <TableColumn>Dirección</TableColumn>
-                            <TableColumn>Ciudad</TableColumn>
-                            <TableColumn>NIT</TableColumn>
-                            <TableColumn>Habitaciones</TableColumn>
-                            <TableColumn>Acciones</TableColumn>
-                        </TableHeader>
-                        <TableBody>
-                            {data && data.length > 0 ? (
-                                data.map((hotel) => (
-                                    <TableRow key={hotel.id}>
-                                        <TableCell>{hotel.id}</TableCell>
-                                        <TableCell>{hotel.nombre}</TableCell>
-                                        <TableCell>{hotel.direccion}</TableCell>
-                                        <TableCell>{hotel.ciudad}</TableCell>
-                                        <TableCell>{hotel.nit}</TableCell>
-                                        <TableCell>{hotel.numero_habitaciones}</TableCell>
-                                        <TableCell>
-                                            <Button
-                                                color="danger"
-                                                size="sm"
-                                                onPress={() => openDeleteModal(hotel.id.toString())}
-                                            >
-                                                Eliminar
-                                            </Button>
-                                            <Button
-                                                color="primary"
-                                                size="sm"
-                                                onPress={() => openUpdateModal(hotel.id)}
-                                                className="ml-2"
-                                            >
-                                                Actualizar
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={7}>No se encontraron hoteles</TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-
-                    <Pagination
-                        total={10}
-                        page={page}
-                        onChange={handlePageChange}
-                        className="mt-4"
-                        showControls
-                    />
+                    {filteredData && filteredData.length > 0 ? (
+                        <>
+                            <Table aria-label="Gestión de Hoteles">
+                                <TableHeader>
+                                    <TableColumn>ID</TableColumn>
+                                    <TableColumn>Nombre</TableColumn>
+                                    <TableColumn>Dirección</TableColumn>
+                                    <TableColumn>Ciudad</TableColumn>
+                                    <TableColumn>NIT</TableColumn>
+                                    <TableColumn>Habitaciones</TableColumn>
+                                    <TableColumn>Acciones</TableColumn>
+                                </TableHeader>
+                                <TableBody>
+                                    {filteredData.map((hotel) => (
+                                        <TableRow key={hotel.id}>
+                                            <TableCell>{hotel.id}</TableCell>
+                                            <TableCell>{hotel.nombre}</TableCell>
+                                            <TableCell>{hotel.direccion}</TableCell>
+                                            <TableCell>{hotel.ciudad}</TableCell>
+                                            <TableCell>{hotel.nit}</TableCell>
+                                            <TableCell>{hotel.numero_habitaciones}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    color="danger"
+                                                    size="sm"
+                                                    onPress={() => openDeleteModal(hotel.id.toString())}
+                                                >
+                                                    Eliminar
+                                                </Button>
+                                                <Button
+                                                    color="primary"
+                                                    size="sm"
+                                                    onPress={() => openUpdateModal(hotel.id)}
+                                                    className="ml-2"
+                                                >
+                                                    Actualizar
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                            <Pagination
+                                total={Math.ceil(filteredData.length / 10)}
+                                page={page}
+                                onChange={handlePageChange}
+                                className="mt-4"
+                                showControls
+                            />
+                        </>
+                    ) : (
+                        <p>No se encontraron hoteles</p> 
+                    )}
                 </>
             )}
 
